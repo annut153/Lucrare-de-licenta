@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pacient - Ace Clinic</title>
+  <link rel="icon" href="../images/logo/logoo6.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/pacient.css">
+</head>
+<body>
+<div id="sectiune-dinamica"></div>
+
+<header class="header">
+  <div class="logo">
+    <img src="../images/logo/logo-login.png" alt="Logo">
+    <span>Ace</span><span>Clinic</span>
+  </div>
+
+  <div class="menu">
+    <i class="fas fa-user-circle user-icon" id="user-icon"></i>
+    <span id="nume-navbar"></span>
+  </div>
+
+  <div class="dropdown" id="dropdownPacient">
+    <button id="btn-istoric"><i class="fas fa-calendar-check"></i> Istoric programări</button>
+    <button id="btn-fisa"><i class="fas fa-notes-medical"></i> Fișa medicală</button>
+    <button id="btn-schimba-parola"><i class="fas fa-key"></i> Schimbă parola</button>
+    <button onclick="location.href='home.html'"><i class="fas fa-sign-out-alt"></i> Deconectare</button>
+  </div>
+</header>
+
+<main>
+  <h1>Bun venit, <span id="nume-pacient"></span>!</h1>
+  <p><em>"Zâmbetul tău e prioritatea noastră – ACE Clinic"</em></p>
+
+  <section class="container-box">
+    <h2>Programare stomatologică</h2>
+    <form id="formular-programare-stoma">
+      <label for="specializare-stoma">Specializarea stomatologică:</label>
+      <select id="specializare-stoma" required>
+        <option value="">-- Selectează --</option>
+      </select><br><br>
+
+      <label for="medic-stoma">Medicul dorit:</label>
+      <select id="medic-stoma" required>
+        <option value="">-- Selectează medic --</option>
+      </select><br><br>
+
+      <label for="data-stoma">Data:</label>
+      <input type="date" id="data-stoma" min="" required><br><br>
+
+      <label for="ora-stoma">Ora:</label>
+      <select id="ora-stoma" required>
+        <option value="">-- Selectează ora --</option>
+        <!-- Opțiunile vor fi generate dinamic din JS -->
+      </select><br><br>
+
+      <label for="detalii-stoma">Detalii simptome:</label><br>
+      <textarea id="detalii-stoma" rows="3" cols="40" placeholder="Ex: durere, sângerare gingivală, carii multiple..."></textarea><br><br>
+
+      <button type="submit">Trimite programarea</button>
+    </form>
+  </section>
+
+  <section class="container-box" id="sectiune-fisa"><h2>Fișa medicală</h2></section>
+  <section class="container-box" id="sectiune-istoric">
+    <h2>Istoric programări</h2>
+    <div id="lista-programari"></div>
+  </section>
+
+  <section class="feedback">
+    <h2>Feedback Medic</h2>
+    <form id="feedback-form">
+      <div class="form-group">
+        <label for="feedback-id-medic">Selectează medicul</label>
+        <select id="feedback-id-medic" required>
+          <option value="">Alege medicul</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rating medic</label>
+        <div class="rating">
+          <input type="radio" name="rating-medic" value="5" id="5m"><label for="5m">☆</label>
+          <input type="radio" name="rating-medic" value="4" id="4m"><label for="4m">☆</label>
+          <input type="radio" name="rating-medic" value="3" id="3m"><label for="3m">☆</label>
+          <input type="radio" name="rating-medic" value="2" id="2m"><label for="2m">☆</label>
+          <input type="radio" name="rating-medic" value="1" id="1m"><label for="1m">☆</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="feedback-comment-medic">Comentariu</label>
+        <textarea id="feedback-comment-medic" rows="4" placeholder="Scrieți-vă părerea despre medic..."></textarea>
+      </div>
+      <button type="submit" class="submit-btn">
+        <i class="fas fa-paper-plane"></i> Trimite Feedback
+      </button>
+    </form>
+  </section>
+</main>
+
+<div id="modal-schimba-parola" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="close-modal-schimba-parola">&times;</span>
+    <h2>Schimbă parola</h2>
+    <form id="form-schimba-parola">
+      <label for="parola-noua">Parolă nouă:</label>
+      <input type="password" id="parola-noua" required minlength="6"><br>
+      <label for="parola-confirmare">Confirmă parola:</label>
+      <input type="password" id="parola-confirmare" required minlength="6"><br>
+      <div id="parola-eroare" style="color:red;min-height:20px;"></div>
+      <button type="submit">Schimbă parola</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/pacient.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Panou Medic - Cabinet Stomatologic</title>
+    <link rel="icon" href="../images/logo/logoo6.png" type="image/png">
+    <link rel="stylesheet" href="../css/medic.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .status-no-show {
+            color: grey;
+            font-weight: bold;
+        }
+        .status-finalizat {
+            color: green;
+            font-weight: bold;
+        }
+        .status-in-curs {
+            color: blue;
+            font-weight: bold;
+        }
+        .status-intarziat {
+            color: orange;
+            font-weight: bold;
+        }
+        .status-plecat {
+            color: purple;
+            font-weight: bold;
+        }
+        .status-in-asteptare {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .status-asteptat {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-anulat {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .consultation-section {
+            border: 2px solid #00b8b8;
+            border-radius: 15px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .patient-selected {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+        }
+        
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="../images/logo/logo-login.png" alt="Logo">
+                <span>Ace</span><span>Clinic</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link" id="home-btn">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    Programări
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    Pacienți
+                </a>
+                <a href="#" class="nav-link" id="stats-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    Statistici
+                </a>
+                <a href="#" class="nav-link" id="profile-btn">
+                    <i class="fas fa-user-md"></i>
+                    Profil
+                </a>
+            </div>
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="medic-name">Dr. Voicu Ana</span>
+                    <span class="user-role" id="medic-specializare">Estetică dentară</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <main class="dashboard">
+            <section class="queue-section">
+                <div class="section-header">
+                    <h2>Coadă de Așteptare</h2>
+                </div>
+                <div class="queue-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <span>Pacienți în așteptare: <strong id="patients-in-queue">0</strong></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Timp mediu de așteptare: <strong id="avg-wait-time">0</strong> min</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-calendar-day"></i>
+                        <span>Data: <strong id="current-date">-</strong></span>
+                    </div>
+                </div>
+                <div class="queue-cards" id="queue-cards-container">
+                    <div class="loading">Se încarcă coada de așteptare...</div>
+                </div>
+            </section>
+
+            <section class="appointments-section">
+                <div class="section-header">
+                    <h2>Programări - <span id="today-date">-</span></h2>
+                </div>
+                <div class="appointments-cards" id="appointments-cards-container">
+                    <div class="loading">Se încarcă programările...</div>
+                </div>
+            </section>
+
+            <section class="all-appointments-section" id="all-appointments-section" style="margin-top:40px;">
+                <div class="section-header">
+                    <h2>Toate Programările</h2>
+                    <label for="appointments-status-filter" style="margin-left:20px; font-weight:normal; font-size:1em;">
+                        Filtrează după status:
+                        <select id="appointments-status-filter">
+                            <option value="toate">Toate</option>
+                            <option value="programata">Programate</option>
+                            <option value="finalizat">Finalizate</option>
+                            <option value="anulata">Anulate</option>
+                            <option value="neprezentat">Neprezentate</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="appointments-table-container">
+                    <table class="appointments-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Ora</th>
+                                <th>Pacient</th>
+                                <th>Telefon</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-appointments-tbody">
+                            <!-- Programările vor fi generate dinamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="consultation-section">
+                <h2>Formular Consultație</h2>
+                <form id="consultation-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="patient-select">Pacient</label>
+                            <select id="patient-select" required>
+                                <option value="">Selectează pacientul</option>
+                            </select>
+                            <div id="selected-patient-name" style="margin-top:8px;font-weight:500;color:#007bff;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="start-time">Ora începerii</label>
+                            <input type="time" id="start-time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end-time">Ora terminării</label>
+                            <input type="time" id="end-time" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="diagnostic">Diagnostic</label>
+                            <textarea id="diagnostic" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="treatment">Tratament</label>
+                            <textarea id="treatment" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cost">Cost Consultație (RON)</label>
+                            <input type="number" id="cost" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Salvează Consultația
+                    </button>
+                </form>
+            </section>
+
+            <section class="patients-section" id="patients-section" style="display:none; margin-top:40px;">
+                <div class="section-header">
+                    <h2>Pacienții consultați</h2>
+                </div>
+                
+
+                
+                <!-- Căutare pacienți -->
+                <div class="search-container" style="margin-bottom: 20px;">
+                    <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666; z-index: 1;"></i>
+                        <input type="text" id="search-patient" placeholder="Caută pacient după nume..." style="width:100%; padding:12px 12px 12px 40px; border-radius:8px; border:1px solid #ddd; font-size:1.1em; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    </div>
+                </div>
+                
+                <!-- Container cu scroll pentru pacienți -->
+                <div class="patients-container" style="background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+                    <div class="patients-list-container" style="max-height: 400px; overflow-y: auto; padding: 0;">
+                        <ul id="patients-list" class="patients-list-vertical"></ul>
+                    </div>
+                </div>
+                
+                <!-- Detalii pacient -->
+                <div id="patient-details" class="patient-details" style="display:none; margin-top:30px;">
+                    <h3>Detalii pacient</h3>
+                    <div id="patient-info"></div>
+                    
+                    <div class="consultation-details" style="margin-top: 20px;">
+                        <h4>Ultima consultație</h4>
+                        <div class="consultation-info" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="margin-bottom: 15px;">
+                                <strong>Data consultației:</strong> <span id="consultation-date">-</span>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <strong>Diagnostic:</strong> 
+                                <div id="diagnostic-content" style="background: white; padding: 10px; border-radius: 5px; margin-top: 5px; min-height: 20px; border: 1px solid #ddd;"></div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <strong>Tratament:</strong> 
+                                <div id="treatment-content" style="background: white; padding: 10px; border-radius: 5px; margin-top: 5px; min-height: 20px; border: 1px solid #ddd;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mentions-section" style="margin-top: 20px;">
+                        <h4>Adaugă mențiuni</h4>
+                        <div style="margin-bottom: 15px;">
+                            <textarea id="patient-notes" rows="3" placeholder="Scrie mențiunea aici..." style="width:100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical;"></textarea>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <button id="add-to-diagnostic-btn" class="save-btn" style="flex: 1;"><i class="fas fa-plus"></i> Adaugă la diagnostic</button>
+                            <button id="add-to-treatment-btn" class="save-btn" style="flex: 1;"><i class="fas fa-plus"></i> Adaugă la tratament</button>
+                        </div>
+                        <div id="notes-status" style="margin-top:10px;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-section" id="stats-section" style="display:none; margin-top:40px;">
+                <div class="section-header">
+                    <h2>Statistici activitate</h2>
+                </div>
+                <div class="stats-cards" id="stats-cards" style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:32px;"></div>
+                <div class="stats-graph-container" style="background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);max-width:700px;margin:0 auto;">
+                    <h3 style="text-align:center;margin-bottom:16px;">Evoluție săptămânală consultații</h3>
+                    <canvas id="stats-graph" height="120"></canvas>
+                </div>
+            </section>
+
+            <section class="profile-section" id="profile-section" style="display:none; margin-top:40px;">
+                <h2 style="text-align:center;margin-bottom:24px;">Profilul meu</h2>
+                <div class="profile-card" id="profile-card" style="display:flex;align-items:center;gap:32px;">
+                    <img src="../images/doctors/d1.jpg" alt="Poza profil medic" class="profile-pic" id="profile-pic" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #007bff;cursor:pointer;">
+                    <input type="file" id="profile-upload" accept="image/*" style="display:none;">
+                    <div class="profile-info" id="profile-info"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="mesaj-consultatie" style="color: green; font-weight: bold; display: none;"></div>
+
+    <script src="../js/medic.js"></script>
+    <script>
+        window.anuntaSosire = async function(idMedic) {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+            const userId = sessionStorage.getItem('userId');
+            if (isLoggedIn && userId) {
+                try {
+                    const res = await fetch('/api/coada', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_pacient: userId, id_medic: idMedic })
+                    });
+                    const data = await res.json();
+                    // Afișează statusul cozii pentru pacient
+                    await afiseazaStatusPersonalCoada(idMedic, userId);
+                } catch (err) {
+                    alert('Eroare la anunțarea sosirii.');
+                }
+            }
+        }
+
+        async function verificaConsultatieNoua(idPacient) {
+            const res = await fetch(`/api/pacient/${idPacient}/consultatie-noua`);
+            const data = await res.json();
+            if (data.consultatieNoua) {
+                document.getElementById('mesaj-consultatie').innerText =
+                    'Consultația ta a fost finalizată! Poți consulta fișa medicală în pagina personală.';
+                document.getElementById('mesaj-consultatie').style.display = 'block';
+                // Ascunde mesajele de coadă
+                document.getElementById('mesaj-coada').style.display = 'none';
+                document.getElementById('timp-asteptare').style.display = 'none';
+                // Marchează ca văzut
+                await fetch(`/api/pacient/${idPacient}/consultatie-noua-vazuta`, { method: 'POST' });
+            }
+        }
+    </script>
+</body>
+</html>

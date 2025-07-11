@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autentificare - Ace Clinic</title>
+<link rel="stylesheet" href="/css/login.css">
+  <link rel="icon" href="../images/logo/logoo6.png" type="image/png">
+<!-- CSS Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+</head>
+<body>
+
+  <header class="login-header">
+    <img src="../images/logo/logo-login.png" alt="Logo Ace Clinic" class="login-logo">
+  </header>
+
+  <section class="login-section">
+    <div class="login-box">
+      <h2 id="form-title">Autentificare</h2>
+
+      <!-- FORMULAR LOGIN -->
+      <form id="login-form">
+        <input type="text" id="username" placeholder="Nume utilizator" required>
+        <input type="password" id="password" placeholder="Parolă" required>
+        <button type="submit">Autentifică-te</button>
+        <p>Nu ai cont? <a href="#" id="switch-to-register">Înregistrează-te</a></p>
+      </form>
+
+      <!-- FORMULAR ÎNREGISTRARE -->
+      <form id="register-form" style="display: none;">
+        <input type="text" id="nume" name="nume" placeholder="Nume" required>
+        <input type="text" id="prenume" name="prenume" placeholder="Prenume" required>
+        <input type="text" id="birthdate" name="birthdate" placeholder="Data nașterii">
+        <input type="email" id="email" name="email" placeholder="Email" required
+        pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+        title="Introduceți un email valid (ex: exemplu@email.com)"> 
+        <input type="tel" id="telefon" name="telefon" placeholder="Telefon" required>
+        <input type="password" id="parola" name="parola" placeholder="Parolă" required>
+        <input type="password" id="confirma" placeholder="Confirmă parola" required>
+        <button type="submit">Înregistrează-te</button>
+        <p>Ai deja cont? <a href="#" id="switch-to-login">Autentificare</a></p>
+      </form>
+      
+    </div>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/js/login.js"></script>
+
+</body>
+</html>

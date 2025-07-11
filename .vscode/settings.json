@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "db_licenta",
+            "database": "${workspaceFolder:Licenta01}/back/baza_date2.db"
+        }
+    ]
+}
