@@ -1,4 +1,4 @@
-const { startDatabase, getDb } = require('./db');
+/*const { startDatabase, getDb } = require('./db');
 
 async function testDatabase() {
   try {
@@ -47,4 +47,21 @@ async function testDatabase() {
   }
 }
 
-testDatabase(); 
+testDatabase(); */
+const sqlite3 = require('sqlite3').verbose();
+
+// Creează o bază de date temporară în memorie
+let db = new sqlite3.Database(':memory:', (err) => {
+  if (err) {
+    return console.error('Eroare la deschiderea bazei de date:', err.message);
+  }
+  console.log('Conexiune SQLite creată cu succes!');
+});
+
+// Închide baza de date
+db.close((err) => {
+  if (err) {
+    return console.error('Eroare la închidere:', err.message);
+  }
+  console.log('Conexiune închisă.');
+});

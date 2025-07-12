@@ -156,7 +156,7 @@ app.get('/api/specializari', async (req, res) => {
   }
 });
 
-// Pornire server
+/* Pornire server
 startDatabase().then((connected) => {
   if (!connected) {
     console.log("Serverul se oprește");
@@ -166,4 +166,18 @@ startDatabase().then((connected) => {
   app.listen(3000, '0.0.0.0', () => {
     console.log("Serverul rulează pe http://localhost:3000");
   });
+});*/
+
+// Pornire server
+startDatabase().then((connected) => {
+  if (!connected) {
+    console.log("Serverul se oprește");
+    process.exit(1);
+  }
+  db = getDb();
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Serverul rulează pe portul ${PORT}`);
+  });
 });
+
